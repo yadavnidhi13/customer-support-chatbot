@@ -1,0 +1,29 @@
+[
+  {
+    "id": "507cee2a-9c3d-4608-9710-be6adac06226",
+    "name": "Unknown.jpeg",
+    "filename": "586c9500-c78b-4c30-a2c9-72cb3a4c13c0.jpeg",
+    "url": "/uploads/586c9500-c78b-4c30-a2c9-72cb3a4c13c0.jpeg",
+    "size": 110554,
+    "type": "image/jpeg",
+    "uploadedAt": "2026-10-24T19:01:14.817Z"
+  },
+  {
+    "id": "cf748d30-f7f3-44ed-88e1-e085c5893cb0",
+    "name": "Unknown.jpeg",
+    "filename": "6ae35fa8-88cd-4249-8632-69b05d65ffc5.jpeg",
+    "url": "/uploads/6ae35fa8-88cd-4249-8632-69b05d65ffc5.jpeg",
+    "size": 110554,
+    "type": "image/jpeg",
+    "uploadedAt": "2026-10-24T19:10:33.311Z"
+  },
+  {
+    "id": "aac132e4-39b5-4ba8-b563-ea9776d6a92a",
+    "name": "Unknown.jpeg",
+    "filename": "285ca003-787d-4719-9e0e-9da81b3730d4.jpeg",
+    "url": "/uploads/285ca003-787d-4719-9e0e-9da81b3730d4.jpeg",
+    "size": 110554,
+    "type": "image/jpeg",
+    "uploadedAt": "2026-10-24T19:10:36.647Z"
+  }
+]

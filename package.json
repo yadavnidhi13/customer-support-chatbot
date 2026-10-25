@@ -1,0 +1,23 @@
+{
+  "name": "nini-support",
+  "version": "1.0.0",
+  "description": "Nini Support - Free FAQ-based customer support chatbot",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "node --check server.js",
+    "open:pages": "open http://localhost:3000 && open http://localhost:3000/admin.html"
+  },
+  "keywords": [
+    "chatbot",
+    "customer-support",
+    "faq"
+  ],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "express": "^5.3.0",
+    "multer": "^2.5.0"
+  }
+}

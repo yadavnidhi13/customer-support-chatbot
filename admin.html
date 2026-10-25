@@ -1,0 +1,463 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nini Support — Admin</title>
+<style>
+:root{
+  --bg:#100e13;--panel:#19161e;--panel2:#211c27;
+  --pink:#f39ac8;--pink2:#d96da8;--text:#f7f1f6;
+  --muted:#a99eae;--border:#352c3b;--green:#8ee0b0;
+  --red:#ff929d;--radius:16px
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+button,input,textarea{font:inherit}
+button{cursor:pointer}
+.hidden{display:none!important}
+.muted{color:var(--muted)}
+header{height:76px;padding:0 5%;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);background:#151219;position:sticky;top:0;z-index:5}
+.brand{font-size:25px;font-weight:850;letter-spacing:-1px}
+.brand span{color:var(--pink)}
+.header-right{display:flex;gap:10px;align-items:center}
+.container{max-width:1200px;margin:auto;padding:28px 22px 60px}
+h1{font-size:30px;margin:0 0 8px}
+h2{font-size:19px;margin:0 0 7px}
+h3{font-size:15px}
+p{line-height:1.55}
+.subtitle{color:var(--muted);font-size:14px;margin:0 0 24px}
+.panel{background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);padding:22px;margin-bottom:20px;min-width:0}
+.panel-header{display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:20px}
+.panel-header p{color:var(--muted);font-size:13px;margin:0}
+.button{background:var(--pink);color:#24131e;border:0;border-radius:10px;padding:11px 15px;font-weight:700}
+.button:hover{background:#ffc0df}
+.button.secondary{background:var(--panel2);color:var(--text);border:1px solid var(--border)}
+.button.danger{background:#47222c;color:#ffc2cb;border:1px solid #69313e}
+.button.small{padding:8px 11px;font-size:12px}
+input,textarea{width:100%;padding:12px 13px;background:#110f15;color:var(--text);border:1px solid var(--border);border-radius:10px;outline:none}
+input:focus,textarea:focus{border-color:var(--pink)}
+label{display:block;font-size:13px;color:#d9cedc;margin:14px 0 7px}
+.login-wrap{min-height:calc(100vh - 76px);display:grid;place-items:center;padding:22px}
+.login-card{width:100%;max-width:420px;background:var(--panel);border:1px solid var(--border);border-radius:24px;padding:30px}
+.login-card .button{width:100%;margin-top:15px}
+.error{color:var(--red);font-size:13px;margin-top:12px}
+.success{color:var(--green);font-size:13px;margin-top:12px}
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin:25px 0}
+.stat{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:18px}
+.stat .label{color:var(--muted);font-size:12px}
+.stat .number{font-size:27px;font-weight:800;margin-top:9px;color:var(--pink);overflow-wrap:anywhere}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:14px}
+.card{border:1px solid var(--border);background:#151219;border-radius:13px;padding:15px;min-width:0}
+.card p{font-size:13px;color:var(--muted);overflow-wrap:anywhere}
+.empty{border:1px dashed var(--border);border-radius:12px;padding:25px;color:var(--muted);text-align:center;grid-column:1/-1}
+.pill{display:inline-block;border-radius:20px;background:#352335;color:var(--pink);font-size:11px;padding:5px 9px;margin-bottom:10px}
+.row{display:flex;gap:10px;flex-wrap:wrap}
+.row>*{flex:1;min-width:130px}
+.feedback-message{white-space:pre-wrap;overflow-wrap:anywhere;color:#e8dfe9;font-size:14px}
+.stars{color:var(--pink);font-size:17px}
+.faq-item{border:1px solid var(--border);border-radius:12px;padding:15px;margin-top:12px;background:#151219}
+.faq-question{font-weight:700;margin-bottom:8px;overflow-wrap:anywhere}
+.faq-answer{color:#c7bbc9;font-size:14px;white-space:pre-wrap;overflow-wrap:anywhere}
+.faq-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.upload-preview{width:100%;height:180px;object-fit:contain;background:#0c0a0e;border-radius:9px;margin-bottom:12px}
+footer{text-align:center;color:var(--muted);font-size:12px;padding:20px}
+.toast{position:fixed;right:20px;bottom:20px;background:var(--panel2);border:1px solid var(--border);border-radius:12px;padding:14px 18px;z-index:20;max-width:90%;box-shadow:0 8px 30px #0008}
+@media(max-width:700px){
+ header{padding:0 16px;height:66px}
+ .brand{font-size:21px}
+ .container{padding:22px 14px 40px}
+ .stats{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .panel{padding:16px}
+ h1{font-size:25px}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand">nini <span>support.</span></div>
+  <div class="header-right">
+    <span class="muted" id="adminStatus" style="font-size:12px"></span>
+    <button class="button secondary small hidden" id="logoutBtn">Log out</button>
+  </div>
+</header>
+
+<section id="loginView" class="login-wrap">
+  <div class="login-card">
+    <div class="brand">nini <span>support.</span></div>
+    <h1 style="margin-top:28px">Welcome back ✿</h1>
+    <p class="subtitle">Sign in to manage FAQs, customer feedback and uploads.</p>
+    <form id="loginForm">
+      <label for="password">Admin password</label>
+      <input id="password" type="password" placeholder="Enter your admin password" required autocomplete="current-password">
+      <button class="button" type="submit">Sign in →</button>
+      <div id="loginError" class="error"></div>
+    </form>
+    <p class="muted" style="font-size:12px;margin:20px 0 0">Your password stays in this browser session.</p>
+  </div>
+</section>
+
+<main id="dashboardView" class="container hidden">
+  <h1>Your dashboard ✿</h1>
+  <p class="subtitle">A little overview of what's happening with Nini Support.</p>
+
+  <div class="stats">
+    <div class="stat"><div class="label">Total FAQs</div><div class="number" id="faqCount">—</div></div>
+    <div class="stat"><div class="label">Feedback entries</div><div class="number" id="feedbackCount">—</div></div>
+    <div class="stat"><div class="label">Average rating</div><div class="number" id="averageRating">—</div></div>
+    <div class="stat"><div class="label">Customer uploads</div><div class="number" id="uploadCount">—</div></div>
+  </div>
+
+  <section class="panel">
+    <div class="panel-header">
+      <div><h2>Customer feedback</h2><p>Recent ratings and messages.</p></div>
+      <button class="button secondary" id="refreshFeedbackBtn">↻ Refresh</button>
+    </div>
+    <div id="feedbackList" class="grid"><div class="empty">Loading feedback…</div></div>
+  </section>
+
+  <section class="panel" id="customerUploads">
+    <div class="panel-header">
+      <div><h2>Customer uploads</h2><p>Files submitted through your support chat.</p></div>
+      <button class="button secondary" id="refreshUploadsBtn">↻ Refresh uploads</button>
+    </div>
+    <div id="uploadsList" class="grid"><div class="empty">Loading uploads…</div></div>
+  </section>
+
+  <section class="panel" id="faqManagement">
+    <div class="panel-header">
+      <div><h2>FAQ management</h2><p>Add, edit or remove chatbot answers.</p></div>
+      <button class="button secondary" id="refreshFaqBtn">↻ Refresh FAQs</button>
+    </div>
+
+    <form id="faqForm">
+      <input id="faqId" type="hidden">
+      <label for="faqQuestion">Question</label>
+      <input id="faqQuestion" maxlength="500" placeholder="e.g. How can I contact support?" required>
+      <label for="faqAnswer">Answer</label>
+      <textarea id="faqAnswer" rows="4" maxlength="5000" placeholder="Write the answer your chatbot should give…" required></textarea>
+      <div class="row" style="margin-top:14px">
+        <button class="button" type="submit" id="saveFaqBtn">＋ Save FAQ</button>
+        <button class="button secondary" type="button" id="cancelEditBtn">Clear form</button>
+      </div>
+      <div id="faqFormMessage" class="muted" style="font-size:13px;margin-top:10px"></div>
+    </form>
+
+    <div style="border-top:1px solid var(--border);margin:25px 0"></div>
+    <div id="faqList"><div class="empty">Loading FAQs…</div></div>
+  </section>
+</main>
+
+<div id="toast" class="toast hidden" role="status"></div>
+<footer>Nini Support · Made with care ♡</footer>
+
+<script>
+(() => {
+  "use strict";
+
+  const $ = id => document.getElementById(id);
+  let adminPassword = "";
+  let faqs = [];
+  let feedback = [];
+  let uploads = [];
+  let toastTimer;
+
+  function escapeHTML(value) {
+    return String(value ?? "").replace(/[&<>"']/g, char => ({
+      "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+    })[char]);
+  }
+
+  function showToast(message) {
+    $("toast").textContent = message;
+    $("toast").classList.remove("hidden");
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => $("toast").classList.add("hidden"), 3500);
+  }
+
+  async function apiRequest(url, options = {}) {
+    const headers = new Headers(options.headers || {});
+    headers.set("x-admin-password", adminPassword);
+    if (options.body && !(options.body instanceof FormData)) {
+      headers.set("Content-Type", "application/json");
+    }
+
+    const response = await fetch(url, {...options, headers});
+    let data;
+    try { data = await response.json(); }
+    catch { throw new Error("The server returned an invalid response."); }
+
+    if (response.status === 401 || response.status === 403) {
+      logout();
+      throw new Error("Your session has expired. Please sign in again.");
+    }
+    if (!response.ok || data.success === false) {
+      throw new Error(data.error || data.message || `Request failed (${response.status}).`);
+    }
+    return data;
+  }
+
+  function showDashboard() {
+    $("loginView").classList.add("hidden");
+    $("dashboardView").classList.remove("hidden");
+    $("logoutBtn").classList.remove("hidden");
+    $("adminStatus").textContent = "Admin session";
+    loadAll();
+  }
+
+  function logout() {
+    adminPassword = "";
+    $("password").value = "";
+    $("dashboardView").classList.add("hidden");
+    $("loginView").classList.remove("hidden");
+    $("logoutBtn").classList.add("hidden");
+    $("adminStatus").textContent = "";
+  }
+
+  $("loginForm").addEventListener("submit", async event => {
+    event.preventDefault();
+    adminPassword = $("password").value;
+    $("loginError").textContent = "";
+
+    try {
+      // Test the password against an admin-protected endpoint.
+      await apiRequest("/api/admin/feedback");
+      showDashboard();
+    } catch (error) {
+      adminPassword = "";
+      $("loginError").textContent = error.message.includes("expired")
+        ? "Please check the server's admin authentication setup."
+        : error.message;
+    }
+  });
+
+  $("logoutBtn").addEventListener("click", logout);
+
+  function setStat(id, value) {
+    $(id).textContent = value;
+  }
+
+  async function loadAll() {
+    await Promise.allSettled([loadFeedback(), loadUploads(), loadFAQs()]);
+  }
+
+  async function loadFeedback() {
+    const container = $("feedbackList");
+    container.innerHTML = '<div class="empty">Loading feedback…</div>';
+
+    try {
+      const data = await apiRequest("/api/admin/feedback");
+      feedback = Array.isArray(data) ? data :
+        (data.feedback || data.items || []);
+      renderFeedback();
+    } catch (error) {
+      container.innerHTML = `<div class="empty">${escapeHTML(error.message)}</div>`;
+    }
+  }
+
+  function renderFeedback() {
+    setStat("feedbackCount", feedback.length);
+    const ratings = feedback
+      .map(item => Number(item.rating ?? item.score))
+      .filter(n => Number.isFinite(n) && n > 0 && n <= 5);
+    setStat("averageRating", ratings.length
+      ? (ratings.reduce((a,b) => a+b, 0) / ratings.length).toFixed(1) + " ★"
+      : "—");
+
+    const container = $("feedbackList");
+    if (!feedback.length) {
+      container.innerHTML = '<div class="empty">No customer feedback yet.</div>';
+      return;
+    }
+
+    container.innerHTML = feedback.slice(0, 100).map(item => {
+      const rating = Number(item.rating ?? item.score);
+      const stars = Number.isFinite(rating) && rating > 0
+        ? "★".repeat(Math.min(5, Math.round(rating))) + "☆".repeat(Math.max(0, 5 - Math.round(rating)))
+        : "Feedback";
+      const message = item.message ?? item.comment ?? item.feedback ?? item.text ?? "";
+      const date = item.createdAt ?? item.created_at ?? item.timestamp ?? item.date;
+      return `
+        <article class="card">
+          <span class="pill">${escapeHTML(item.type ?? item.sentiment ?? "Customer feedback")}</span>
+          <div class="stars">${escapeHTML(stars)}</div>
+          <p class="feedback-message">${escapeHTML(message || "No written comment.")}</p>
+          <p>${date ? escapeHTML(new Date(date).toLocaleString()) : "Date unavailable"}</p>
+        </article>`;
+    }).join("");
+  }
+
+  async function loadUploads() {
+    const container = $("uploadsList");
+    container.innerHTML = '<div class="empty">Loading uploads…</div>';
+
+    try {
+      const data = await apiRequest("/api/admin/uploads");
+      uploads = Array.isArray(data) ? data :
+        (data.uploads || data.files || data.items || []);
+      renderUploads();
+    } catch (error) {
+      container.innerHTML = `<div class="empty">${escapeHTML(error.message)}<br><br>Check that your server has the protected /api/admin/uploads route.</div>`;
+      setStat("uploadCount", "—");
+    }
+  }
+
+  function renderUploads() {
+    setStat("uploadCount", uploads.length);
+    const container = $("uploadsList");
+
+    if (!uploads.length) {
+      container.innerHTML = '<div class="empty">No customer uploads yet.</div>';
+      return;
+    }
+
+    container.innerHTML = uploads.slice().reverse().map(file => {
+      const url = String(file.url || "");
+      const safeURL = url.startsWith("/uploads/") ? url : "";
+      const isImage = /^image\/(jpeg|png|gif|webp)$/i.test(file.type || "");
+      const size = Number(file.size);
+      const sizeText = Number.isFinite(size) ? (size / 1024).toFixed(1) + " KB" : "";
+      const date = file.uploadedAt || file.uploaded_at || file.createdAt;
+      return `
+        <article class="card">
+          ${isImage && safeURL
+            ? `<a href="${escapeHTML(safeURL)}" target="_blank" rel="noopener noreferrer"><img class="upload-preview" src="${escapeHTML(safeURL)}" alt="Customer upload" loading="lazy"></a>`
+            : `<div class="upload-preview" style="display:grid;place-items:center;font-size:40px">📄</div>`}
+          <h3>${escapeHTML(file.name || file.originalname || "Uploaded file")}</h3>
+          <p>${escapeHTML(file.type || "Unknown type")}${sizeText ? " · " + escapeHTML(sizeText) : ""}</p>
+          <p>${date ? escapeHTML(new Date(date).toLocaleString()) : "Date unavailable"}</p>
+          ${safeURL ? `<a class="button secondary small" href="${escapeHTML(safeURL)}" target="_blank" rel="noopener noreferrer" style="display:inline-block;text-decoration:none">Open file ↗</a>` : ""}
+        </article>`;
+    }).join("");
+  }
+
+  async function loadFAQs() {
+    const container = $("faqList");
+    container.innerHTML = '<div class="empty">Loading FAQs…</div>';
+
+    try {
+      const data = await apiRequest("/api/admin/faqs");
+      faqs = Array.isArray(data) ? data : (data.faqs || data.items || []);
+      setStat("faqCount", faqs.length);
+      renderFAQs();
+    } catch (error) {
+      container.innerHTML = `<div class="empty">${escapeHTML(error.message)}<br><br>Check your existing /api/admin/faqs route.</div>`;
+      setStat("faqCount", "—");
+    }
+  }
+
+  function renderFAQs() {
+    const container = $("faqList");
+    setStat("faqCount", faqs.length);
+
+    if (!faqs.length) {
+      container.innerHTML = '<div class="empty">No FAQs found. Add your first FAQ above.</div>';
+      return;
+    }
+
+    container.innerHTML = faqs.map((faq, index) => {
+      const question = faq.question ?? faq.q ?? "";
+      const answer = faq.answer ?? faq.a ?? "";
+      return `
+        <article class="faq-item">
+          <span class="pill">FAQ ${index + 1}</span>
+          <div class="faq-question">${escapeHTML(question)}</div>
+          <div class="faq-answer">${escapeHTML(answer)}</div>
+          <div class="faq-actions">
+            <button class="button secondary small" data-edit="${index}">Edit</button>
+            <button class="button danger small" data-delete="${index}">Delete</button>
+          </div>
+        </article>`;
+    }).join("");
+  }
+
+  function clearFAQForm() {
+    $("faqId").value = "";
+    $("faqQuestion").value = "";
+    $("faqAnswer").value = "";
+    $("saveFaqBtn").textContent = "＋ Save FAQ";
+    $("faqFormMessage").textContent = "";
+  }
+
+  $("faqList").addEventListener("click", async event => {
+    const editButton = event.target.closest("[data-edit]");
+    const deleteButton = event.target.closest("[data-delete]");
+
+    if (editButton) {
+      const faq = faqs[Number(editButton.dataset.edit)];
+      if (!faq) return;
+      $("faqId").value = faq.id ?? faq._id ?? "";
+      $("faqQuestion").value = faq.question ?? faq.q ?? "";
+      $("faqAnswer").value = faq.answer ?? faq.a ?? "";
+      $("saveFaqBtn").textContent = "Save changes";
+      $("faqManagement").scrollIntoView({behavior:"smooth"});
+      return;
+    }
+
+    if (deleteButton) {
+      const faq = faqs[Number(deleteButton.dataset.delete)];
+      if (!faq) return;
+      if (!confirm("Delete this FAQ? This cannot be undone.")) return;
+
+      try {
+        const id = faq.id ?? faq._id;
+        if (id === undefined || id === null) {
+          throw new Error("This FAQ has no ID. Your server may require a different delete format.");
+        }
+        await apiRequest("/api/admin/faqs/" + encodeURIComponent(id), {
+          method: "DELETE"
+        });
+        showToast("FAQ deleted.");
+        await loadFAQs();
+      } catch (error) {
+        showToast(error.message);
+      }
+    }
+  });
+
+  $("faqForm").addEventListener("submit", async event => {
+    event.preventDefault();
+
+    const question = $("faqQuestion").value.trim();
+    const answer = $("faqAnswer").value.trim();
+    const id = $("faqId").value;
+
+    if (!question || !answer) {
+      $("faqFormMessage").textContent = "Please enter both a question and an answer.";
+      return;
+    }
+
+    const body = JSON.stringify({question, answer});
+    $("saveFaqBtn").disabled = true;
+
+    try {
+      if (id) {
+        await apiRequest("/api/admin/faqs/" + encodeURIComponent(id), {
+          method: "PUT", body
+        });
+      } else {
+        await apiRequest("/api/admin/faqs", {
+          method: "POST", body
+        });
+      }
+
+      clearFAQForm();
+      showToast(id ? "FAQ updated." : "FAQ added.");
+      await loadFAQs();
+    } catch (error) {
+      $("faqFormMessage").textContent = error.message;
+    } finally {
+      $("saveFaqBtn").disabled = false;
+    }
+  });
+
+  $("cancelEditBtn").addEventListener("click", clearFAQForm);
+  $("refreshFeedbackBtn").addEventListener("click", loadFeedback);
+  $("refreshUploadsBtn").addEventListener("click", loadUploads);
+  $("refreshFaqBtn").addEventListener("click", loadFAQs);
+})();
+</script>
+</body>
+</html>

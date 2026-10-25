@@ -1,0 +1,22 @@
+[
+  {
+    "question": "What is your return policy?",
+    "answer": "Customers can request a return within 7 days of delivery. Items must be unused and in their original packaging."
+  },
+  {
+    "question": "How can I track my order?",
+    "answer": "Please check your order confirmation email for tracking details. If you cannot find them, contact customer support."
+  },
+  {
+    "question": "How can I contact support?",
+    "answer": "Please contact our customer support team for help with orders, returns, or other questions."
+  },
+  {
+    "question": "What are your support hours?",
+    "answer": "Our support team is available Monday to Saturday, from 9 AM to 6 PM."
+  },
+  {
+    "question": "do you offer free shipping?",
+    "answer": "Shipping availability and charges depend on your order and delivery location. Please contact our support team for details."
+  }
+]
